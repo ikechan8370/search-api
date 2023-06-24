@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"regexp"
 	"strings"
 )
 
@@ -54,6 +55,8 @@ func SearchBaidu(ctx context.Context, query string, ua string, limit int) ([]Res
 		linkText := strings.TrimSpace(linkHref)
 		titleText := strings.TrimSpace(sel.Find("div > div > h3 > a").Text())
 		descText := strings.TrimSpace(sel.Find("div > div > div:nth-of-type(2)").Text())
+		regex := regexp.MustCompile(`\s+`)
+		descText = regex.ReplaceAllString(descText, " ")
 		rank += 1
 		if linkText != "" && linkText != "#" && titleText != "" {
 			result := Result{
