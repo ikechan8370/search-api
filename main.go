@@ -1,6 +1,7 @@
 package main
 
 import (
+	"awesomeProject/serp"
 	"github.com/gin-gonic/gin"
 	googlesearch "github.com/rocketlaunchr/google-search"
 	"net/http"
@@ -8,7 +9,6 @@ import (
 )
 
 const proxyAddr = ""
-const defaultUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
 
 func main() {
 	r := gin.Default()
@@ -81,7 +81,7 @@ func main() {
 			})
 			return
 		}
-		returnLinks, err := SearchBing(nil, q, defaultUA, limitNum, proxyAddr)
+		returnLinks, err := serp.SearchBing(nil, q, serp.DefaultUA, limitNum, proxyAddr)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": err.Error(),
@@ -120,7 +120,7 @@ func main() {
 			})
 			return
 		}
-		returnLinks, err := SearchBaidu(nil, q, defaultUA, limitNum)
+		returnLinks, err := serp.SearchBaidu(nil, q, serp.DefaultUA, limitNum)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": err.Error(),

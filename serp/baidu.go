@@ -1,4 +1,4 @@
-package main
+package serp
 
 import (
 	"context"
@@ -103,7 +103,7 @@ func getCookie() ([]*http.Cookie, error) {
 		fmt.Println("创建请求失败:", err)
 		return nil, err
 	}
-	req.Header.Set("User-Agent", defaultUA)
+	req.Header.Set("User-Agent", DefaultUA)
 	// 发送请求
 	resp, err := client.Do(req)
 	if err != nil {
