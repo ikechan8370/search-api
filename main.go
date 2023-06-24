@@ -35,8 +35,8 @@ func main() {
 			return
 		}
 		opts := googlesearch.SearchOptions{
-			Limit:        limitNum,
-			ProxyAddr:    "http://127.0.0.1:7890",
+			Limit: limitNum,
+			//ProxyAddr:    "http://127.0.0.1:7890",
 			LanguageCode: lang,
 		}
 		returnLinks, err := googlesearch.Search(nil, q, opts)
