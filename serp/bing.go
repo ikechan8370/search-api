@@ -2,6 +2,7 @@ package serp
 
 import (
 	"context"
+	"fmt"
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/proxy"
 	"github.com/gocolly/colly/v2/queue"
@@ -22,6 +23,7 @@ func SearchBing(ctx context.Context, query, ua string, limit int, proxyAddr stri
 	filteredRank := 1
 	rank := 1
 	c.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("Referer", fmt.Sprintf("https://www.bing.com/search?go=搜索&q=%s&imgurl=&cbir=sbi&imageBin=&qs=ds&form=QBRE", query))
 		if err := ctx.Err(); err != nil {
 			r.Abort()
 			rErr = err
@@ -34,7 +36,6 @@ func SearchBing(ctx context.Context, query, ua string, limit int, proxyAddr stri
 	})
 	// https://www.w3schools.com/cssref/css_selectors.asp
 	c.OnHTML("#b_results > li", func(e *colly.HTMLElement) {
-
 		sel := e.DOM
 		linkHref, _ := sel.Find("h2 > a").Attr("href")
 		linkText := strings.TrimSpace(linkHref)
