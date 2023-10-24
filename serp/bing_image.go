@@ -61,7 +61,7 @@ func SearchBingImage(ctx context.Context, query, ua string, limit int, proxyAddr
 				//Turl:  TUrl,
 				//T:     t,
 				//Desc:  desc,
-				Src:   src,
+				//Src:   src,
 				Label: label,
 			}
 			if verbose {
@@ -70,6 +70,7 @@ func SearchBingImage(ctx context.Context, query, ua string, limit int, proxyAddr
 				result.Turl = TUrl
 				result.Desc = desc
 				result.T = t
+				result.Src = src
 			}
 			results = append(results, result)
 			filteredRank += 1
