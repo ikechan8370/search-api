@@ -1,16 +1,18 @@
 module awesomeProject
 
-go 1.20
+go 1.21
+
+toolchain go1.23.4
 
 require (
+	github.com/Danny-Dasilva/CycleTLS/cycletls v1.0.26
+	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/gin-gonic/gin v1.9.1
-	github.com/rocketlaunchr/google-search v1.1.6
+	github.com/gocolly/colly/v2 v2.1.0
 )
 
 require (
-	github.com/Danny-Dasilva/CycleTLS/cycletls v1.0.26 // indirect
 	github.com/Danny-Dasilva/fhttp v0.0.0-20240217042913-eeeb0b347ce1 // indirect
-	github.com/PuerkitoBio/goquery v1.8.1 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/antchfx/htmlquery v1.3.0 // indirect
@@ -26,7 +28,6 @@ require (
 	github.com/go-playground/validator/v10 v10.14.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
-	github.com/gocolly/colly/v2 v2.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect

@@ -42,6 +42,9 @@ func SearchBaidu(ctx context.Context, query string, ua string, limit int) ([]Res
 		}
 	})
 
+	c.OnResponse(func(response *colly.Response) {
+		println(string(response.Body))
+	})
 	c.OnError(func(r *colly.Response, err error) {
 		println(err.Error())
 		rErr = err
