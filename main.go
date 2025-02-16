@@ -36,7 +36,20 @@ type Candidate struct {
 
 func main() {
 	r := gin.Default()
+	cache := serp.NewCache(1)
+	r.GET("/purge", func(c *gin.Context) {
+		key := c.DefaultQuery("key", "")
+
+		if key == "" {
+			c.JSON(400, gin.H{"status": "error", "message": "Key parameter is required"})
+			return
+		}
+
+		cache.Delete(key)
+		c.JSON(200, gin.H{"status": "success", "message": fmt.Sprintf("Cache(s) for key '%s' deleted", key)})
+	})
 	r.GET("/google", func(c *gin.Context) {
+
 		if len(geminiKeys) == 0 {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "google is not available",
@@ -52,6 +65,7 @@ func main() {
 			})
 			return
 		}
+
 		lang := c.Query("lang")
 		if lang == "" {
 			lang = "zh-CN"
@@ -71,6 +85,20 @@ func main() {
 				"code":    400,
 			})
 			return
+		}
+		cacheKey := fmt.Sprintf("google:%s:%s:%s:%s", q, limit, lang, verbose)
+		if value, found := cache.Get(cacheKey); found {
+			fmt.Println("Cache hit")
+			c.JSON(http.StatusOK, gin.H{
+				"message": "ok",
+				"code":    200,
+				"data":    value,
+				"source":  "gemini",
+				"cached":  true,
+			})
+			return
+		} else {
+			fmt.Println("Cache miss")
 		}
 		url := geminiBaseUrl + "/v1beta/models/gemini-2.0-flash-001:generateContent"
 		body := "{\n    \"contents\": [\n        {\n            \"parts\": [\n                {\n                    \"text\": \"search and tell me everything about 'ikechan8370'. Prefer to use LANGUAGE. Keep the original search results in the format of a json array. Each result should have these fields: title, description<URL>. Keep the description with the same language as the original search results. You only need to return at most the first LIMIT results.\"\n                }\n            ]\n        }\n    ],\n    \"tools\": [\n        {\n            \"google_search\": {}\n        }\n    ]\n}"
@@ -136,6 +164,7 @@ func main() {
 				if err := json.Unmarshal([]byte(jsonStr), &result); err != nil {
 					log.Fatal(err)
 				}
+				cache.Set(cacheKey, result)
 				c.JSON(http.StatusOK, gin.H{
 					"message": "ok",
 					"code":    200,
@@ -146,7 +175,7 @@ func main() {
 			}
 		}
 		if jsonStr == "" {
-			log.Fatal("No JSON content found")
+			log.Println("No JSON content found")
 			c.JSON(http.StatusOK, gin.H{
 				"message": "ok",
 				"code":    200,
