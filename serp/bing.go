@@ -2,6 +2,7 @@ package serp
 
 import (
 	"context"
+	"errors"
 	"github.com/Danny-Dasilva/CycleTLS/cycletls"
 	"github.com/PuerkitoBio/goquery"
 	"log"
@@ -12,7 +13,10 @@ import (
 
 var BingCookies []cycletls.Cookie
 
-func SearchBing(myJa3 string, ctx context.Context, query, ua string, limit int, proxyAddr string, cookies []cycletls.Cookie) ([]Result, error) {
+func SearchBing(myJa3 string, ctx context.Context, query, ua string, limit int, proxyAddr string, cookies []cycletls.Cookie, retry int) ([]Result, error) {
+	if retry < 0 {
+		return nil, errors.New("retry is invalid")
+	}
 	if myJa3 == "" {
 		myJa3 = "771,4865-4867-4866-49195-49199-52393-52392-49196-49200-49162-49161-49171-49172-51-57-47-53-10,0-23-65281-10-11-35-16-5-51-43-13-45-28-21,29-23-24-25-256-257,0"
 	}
@@ -82,7 +86,8 @@ func SearchBing(myJa3 string, ctx context.Context, query, ua string, limit int, 
 		}
 	})
 	if results == nil {
-		return SearchBing(myJa3, ctx, query, ua, limit, proxyAddr, cookies)
+		retry = retry - 1
+		return SearchBing(myJa3, ctx, query, ua, limit, proxyAddr, cookies, retry)
 	}
 	return results, nil
 }

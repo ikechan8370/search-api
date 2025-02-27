@@ -208,7 +208,7 @@ func main() {
 			})
 			return
 		}
-		returnLinks, err := serp.SearchBing(ja3, nil, q, serp.DefaultUA, limitNum, proxyAddr, nil)
+		returnLinks, err := serp.SearchBing(ja3, nil, q, serp.DefaultUA, limitNum, proxyAddr, nil, 3)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": err.Error(),
